@@ -2,7 +2,6 @@ import requests
 import time
 
 
-
 def test_health_endpoint_returns_healthy(base_url):
     response = requests.get(f"{base_url}/api/health")
     assert response.status_code == 200
@@ -56,8 +55,6 @@ def test_rsvp_to_public_event(base_url, login, event_payload):
     }
 
     rsvp_response = requests.post(f"{base_url}/api/rsvps/event/{event_id}", json=event_body)
-    print(rsvp_response.status_code)
-    print(rsvp_response.json())
 
     assert rsvp_response.status_code == 201
     assert rsvp_response.json()["event_id"] == event_id
@@ -90,7 +87,6 @@ def test_fail_to_rsvp_private_event_without_auth(base_url, login, event_payload_
     }
 
     new_event_response = requests.post(f"{base_url}/api/events", json=event_payload_private, headers=headers)
-    print(new_event_response.json())
     event_id = new_event_response.json()["id"]
     event_body = {
         "attending": True
