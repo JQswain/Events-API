@@ -24,6 +24,13 @@ jobs:
       - name: Run container
         run: |
           docker run -d -p 5000:5000 --name events-api-container events-api:latest
-          sleep 5
-          curl http://127.0.0.1:5000/api/health || exit 1
+          
+          echo "=== RUNNING CONTAINERS ==="
+          docker ps -a
+          
+          echo "=== CONTAINER LOGS ==="
+          docker logs events-api-container
+          
+          sleep 10
+          curl -v http://127.0.0.1:5000/api/health || exit 1
 
