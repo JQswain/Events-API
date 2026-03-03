@@ -26,7 +26,7 @@ def test_login_functionality(base_url, register_user_login_return_JWT):
 
 
 def test_event_creation_with_authentications(base_url, register_user_login_return_JWT, event_payload):
-    access_token,  = register_user_login_return_JWT
+    access_token, _  = register_user_login_return_JWT
 
     event_headers = {
         "Authorization": f"Bearer {access_token}"
@@ -39,7 +39,7 @@ def test_event_creation_with_authentications(base_url, register_user_login_retur
 
 
 def test_rsvp_to_public_event(base_url, register_user_login_return_JWT, event_payload):
-    access_token, = register_user_login_return_JWT
+    access_token, _ = register_user_login_return_JWT
     event_headers = {
         "Authorization": f"Bearer {access_token}"
     }
@@ -76,7 +76,7 @@ def test_fail_to_create_event_without_auth(base_url, event_payload):
 
 
 def test_fail_to_rsvp_private_event_without_auth(base_url, register_user_login_return_JWT, event_payload_private):
-    access_token, = register_user_login_return_JWT
+    access_token, _ = register_user_login_return_JWT
     headers = {
         "Authorization": f"Bearer {access_token}"
     }

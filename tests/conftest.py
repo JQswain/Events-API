@@ -36,18 +36,6 @@ def event_payload():
         "requires_admin": False
     }
 
-@pytest.fixture
-def login(base_url):
-    payload = {
-        "username": "josh_swain",
-        "password": "BetstPassword123"
-    }
-
-    response = requests.post(f"{base_url}/api/auth/login", json=payload)
-    data = response.json()
-    access_token = data["access_token"]
-
-    return access_token
 
 @pytest.fixture
 def event_payload_private():
