@@ -14,12 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Docker buildx
+      - name: Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build docker image
         run: |
-          docker build -t events-api:latest
+          docker buildx -t events-api:latest
 
       - name: Run container
         run: |
