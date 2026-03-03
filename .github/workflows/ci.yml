@@ -19,7 +19,7 @@ jobs:
 
       - name: Build docker image
         run: |
-          docker buildx -t events-api:latest
+          docker build -t events-api:latest .
 
       - name: Run container
         run: |
