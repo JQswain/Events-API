@@ -18,20 +18,15 @@ def test_register_user_creates_new_user(base_url):
     assert payload["username"] in response.json()["user"]["username"]
 
 
-def test_login_functionality(base_url):
-    payload = {
-               "username": "josh_swain",
-               "password": "BetstPassword123"
-               }
-
-    response = requests.post(f"{base_url}/api/auth/login", json=payload)
+def test_login_functionality(base_url, register_user_login_return_JWT):
+    access_token, response = register_user_login_return_JWT
 
     assert response.status_code == 200
     assert "access_token" in response.json()
 
 
 def test_event_creation_with_authentications(base_url, register_user_login_return_JWT, event_payload):
-    access_token = register_user_login_return_JWT
+    access_token,  = register_user_login_return_JWT
 
     event_headers = {
         "Authorization": f"Bearer {access_token}"
@@ -43,8 +38,8 @@ def test_event_creation_with_authentications(base_url, register_user_login_retur
     assert response.json()["description"] == event_payload["description"]
 
 
-def test_rsvp_to_public_event(base_url, login, event_payload):
-    access_token = login
+def test_rsvp_to_public_event(base_url, register_user_login_return_JWT, event_payload):
+    access_token, = register_user_login_return_JWT
     event_headers = {
         "Authorization": f"Bearer {access_token}"
     }
@@ -80,8 +75,8 @@ def test_fail_to_create_event_without_auth(base_url, event_payload):
     assert new_event_response.status_code == 401
 
 
-def test_fail_to_rsvp_private_event_without_auth(base_url, login, event_payload_private):
-    access_token = login
+def test_fail_to_rsvp_private_event_without_auth(base_url, register_user_login_return_JWT, event_payload_private):
+    access_token, = register_user_login_return_JWT
     headers = {
         "Authorization": f"Bearer {access_token}"
     }

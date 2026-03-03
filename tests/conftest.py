@@ -20,7 +20,7 @@ def register_user_login_return_JWT(base_url):
     access_token = login_response.json()["access_token"]
     print(access_token)
 
-    return access_token
+    return access_token, login_response
 
 @pytest.fixture
 def event_payload():
