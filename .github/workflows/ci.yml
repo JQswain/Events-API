@@ -34,3 +34,23 @@ jobs:
           sleep 10
           curl -v http://127.0.0.1:5000/api/health || exit 1
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Unit-Test
+        run: |
+          pytest -v
+
+      - name: Cleanup
+        if: always()
+        run: |
+            docker stop events-api-container
+            docker rm events-api-container
+
+
