@@ -1,4 +1,4 @@
-name: Events-API CI
+name: Events-API CI/CD
 
 on:
   push:
@@ -53,4 +53,39 @@ jobs:
             docker stop events-api-container
             docker rm events-api-container
 
+  deploy:
+    needs: deployment-test
+    runs-on: ubuntu-latest
+    environment: Prod
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      
+      - name: Build and Push Docker Image
+        run: |
+            docker buildx build --platform linux/amd64,linux/arm64 -t ${{ secrets.DOCKER_USERNAME }}/events-api:latest --push .
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST ${{secrets.RENDER_DEPLOY_HOOK}}
+
+      - name: Wait for Deployment and Smoke Test
+        run: |
+          for i in {1..30}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{secrets.RENDER_BASE_URL}}/api/health || echo "000")
+            if [ "$STATUS" -eq 200 ]; then
+              echo "Service is live!"
+              exit 0
+            fi
+            echo "Service not ready yet, retrying in 10s..."
+            sleep 10
+          done
+          echo "Service did not start successfully!"
+          exit 1
+      
 
